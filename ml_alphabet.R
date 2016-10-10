@@ -69,6 +69,8 @@ trainSet$Letter = as.numeric(as.character(trainSet$Letter))
 # quite unique for a given parameter, it indicates that 
 # parameter may be a useful classification tool. Include those
 # parameters in the model.
+### ***Again, there must be a better way to code this
+###    but again, I am going to roll with it for now
 bplot.xy(trainSet$Letter, trainSet$f0)
 bplot.xy(trainSet$Letter, trainSet$f1)
 bplot.xy(trainSet$Letter, trainSet$f2)
@@ -111,16 +113,23 @@ testSet <- trainSet[10000:20000,]
 testSet$Letter <- predict(model, newdata = testSet)
 #summary(testSet)
 
+# Grab the column of predicted Letters 
+# (which still correspond to a number from 1-26)
 prediction <- testSet[,c("Letter")]
 
+# Grab the column of the real Letter corresponding to each character
+# in the test set to see how many we correctly predicted
 testSet2 <- trainSet[10000:20000,]
 sub2 <- testSet2[,c("Letter")]
 
+# Convert the predictions into numbers to do some math operations.
+# Subtract the predictions from the actual values. If we were correct
+# with our prediction, this will result in zero. If we were incorrect,
+# this will not be zero.
 sub3 <- (as.numeric(prediction) - sub2)
 
 # This is the percentage that we got correct (should be ~90 %)
 100 - (sum(sub3!=0) / 10000)*100
 
 # Would be interesting to make a plot showing which letters 
-# were most commonly mistaken as another letter.
-
+# were most commonly mistaken as another letter. 
